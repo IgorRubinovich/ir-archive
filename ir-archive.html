@@ -1,0 +1,115 @@
+<link rel="import" href="../plastik-collapsible/plastik-collapsible.html">
+<link rel="import" href="../iron-icons/iron-icons.html">
+<link rel="import" href="../iron-ajax/iron-ajax.html">
+
+<dom-module id="ir-archive">
+
+	<style>
+
+		.item-content {
+			padding-left: 30px;
+		}
+
+		div a {
+			font: small-caption;
+			text-decoration: none;
+    		color: #56646F;
+		}
+
+	</style>
+
+	<template>
+				
+				<template is="dom-repeat" items="{{ directories }}">
+					<plastik-collapsible>
+						<div class="collapsible-item">
+							<div class="item-header" on-tap="swapIcon">
+								<paper-icon-button icon="folder"></paper-icon-button><p>{{ item.name }}</p></div>
+							<div class="item-content">
+								<template is="dom-repeat" items="{{ item.files }}">
+									<div>
+										<a href="{{ item.url }}" title="Click to download this file" download>
+											<paper-icon-button icon="description"></paper-icon-button><span>{{ item.name }}</span> <span>{{ fileDesc(item.info) }}</span> (<span>{{ fileSize(item.size) }}</span>)
+										</a>
+									</div>
+								</template>
+							</div>
+						</div>
+					</plastik-collapsible>			
+				</template>
+
+				<template is="dom-repeat" items="{{ files }}">
+					<div>
+						<a href="{{ item.url }}" title="Click to download this file" download>
+							<paper-icon-button icon="description"></paper-icon-button><span>{{ item.name }}</span> <span>{{ fileDesc(item.info) }}</span> (<span>{{ fileSize(item.size) }}</span>)
+						</a>
+					</div>
+				</template>
+
+		<iron-ajax
+			id="lsloader"
+			method="GET"
+			handle-as="json"
+			debounce-duration="300"
+			last-response="{{ loadedData }}"
+			on-response="displayLoadedFiles"
+			last-error="{{ lastError }}"
+			verbose=true
+			>
+		</iron-ajax>
+
+	</template>
+
+	<script>
+		Polymer({
+			is : "ir-archive",
+
+			properties : {
+				fulllsUrl 	: { type : String, value : "", notify : true },
+				isFirstTime : { type : Boolean, value : true },
+				dir 		: { type : String, value : "", notify : true },
+				files 		: { type : Array, value : [] },
+				directories : { type : Array, value : [] },  
+			},
+
+			ready : function() {
+
+				if(this.isFirstTime)
+				{
+					this.$.lsloader.url = this.fulllsUrl.replace(/\[path\]/, this.dir);
+					this.$.lsloader.generateRequest();				
+					this.isFirstTime = false;	
+				}
+
+			},
+
+			swapIcon : function(e) {
+				if(e.currentTarget.firstElementChild.icon == "folder")
+					e.currentTarget.firstElementChild.icon = "folder-open";
+				else
+					e.currentTarget.firstElementChild.icon = "folder";
+			},
+
+			fileSize : function(size) {
+				return size/1000 + "Kb";
+			},
+
+			fileDesc : function(desc) {
+				if(desc)
+					return "- " + desc;
+				else
+					return "";
+			},
+
+			displayLoadedFiles : function() {
+				for(var i = 0; i < this.loadedData.length; i++)
+					if(this.loadedData[i].isDirectory)
+						this.push('directories', this.loadedData[i]);
+					else
+						this.push('files', this.loadedData[i]);
+			},
+
+		})
+	</script>
+
+</dom-module>

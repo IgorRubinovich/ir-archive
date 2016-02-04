@@ -1,0 +1,22 @@
+{
+  "name": "ir-archive",
+  "version": "0.1.0",
+  "authors": [
+    "Igor Rubinovich <igor.rubinovih@gmail.com>"
+  ],
+  "description": "simple doc archive",
+  "main": "ir-archive.html",
+  "license": "BSD",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "iron-ajax": "PolymerElements/iron-ajax#~1.0.4",
+    "iron-icons": "PolymerElements/iron-icons#~1.0.3",
+    "plastik-collapsible": "~0.0.3",
+  }
+}
