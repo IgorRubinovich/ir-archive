@@ -1,12 +1,18 @@
 {
   "name": "ir-archive",
-  "version": "0.1.0",
+  "main": "ir-archive.html",
+  "version": "0.2.0",
   "authors": [
     "Igor Rubinovich <igor.rubinovih@gmail.com>"
   ],
   "description": "simple doc archive",
-  "main": "ir-archive.html",
-  "license": "BSD",
+  "moduleType": [
+    "node"
+  ],
+  "keywords": [
+    "koacms"
+  ],
+  "license": "MIT",
   "ignore": [
     "**/.*",
     "node_modules",
@@ -15,8 +21,11 @@
     "tests"
   ],
   "dependencies": {
-    "iron-ajax": "PolymerElements/iron-ajax#~1.0.4",
-    "iron-icons": "PolymerElements/iron-icons#~1.0.3",
+    "iron-ajax": "PolymerElements/iron-ajax#^1.0.4",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.3",
     "plastik-collapsible": "~0.0.3"
   },
+  "resolutions": {
+    "polymer": "^1.2.0"
+   }
 }
