@@ -23,7 +23,10 @@
   "dependencies": {
     "iron-ajax": "PolymerElements/iron-ajax#^1.0.4",
     "iron-icons": "PolymerElements/iron-icons#^1.0.3",
-    "ir-recursive": "git@github.com:IgorRubinovich/ir-recursive.git"
+    "ir-recursive": "git@github.com:IgorRubinovich/ir-recursive.git",
+    "paper-item": "^1.2.1",
+    "paper-icon-button": "^1.1.2",
+    "paper-material": "^1.0.6"
   },
   "resolutions": {
     "polymer": "^1.5.0"
