@@ -10,41 +10,46 @@
 			padding-left: 30px;
 		}
 
-		div a {
+		div a, .size, .caption {
 			font: small-caption;
 			text-decoration: none;
     		color: #56646F;
+		}
+		
+		.caption {
+			color : #798c9a
 		}
 
 	</style>
 
 	<template>
-				
-				<template is="dom-repeat" items="{{ directories }}">
-					<plastik-collapsible>
-						<div class="collapsible-item">
-							<div class="item-header" on-tap="swapIcon">
-								<paper-icon-button icon="folder"></paper-icon-button><p>{{ item.name }}</p></div>
-							<div class="item-content">
-								<template is="dom-repeat" items="{{ item.files }}">
-									<div>
-										<a href="{{ item.url }}" title="Click to download this file" download>
-											<paper-icon-button icon="description"></paper-icon-button><span>{{ item.name }}</span> <span>{{ fileDesc(item.info) }}</span> (<span>{{ fileSize(item.size) }}</span>)
-										</a>
-									</div>
-								</template>
-							</div>
+		<ir-recursive notify-url="{{ treeUrl }}" meta="{{ thisElement() }}">
+			<template item="item">
+				<style>
+					[children-toolbar] {  }
+					.lm { padding-left : 10px; }
+					[content] { padding : 5px; }
+					.xxxcontent { display : block }
+				</style>
+					<div elevation="3" content="content" class="xxxcontent">
+						<div hidden="{{ data.children.length }}">
+								{{ depth }}
+								<a href="{{ data.downloadUrl }}">
+									<b hidden="{{ data.title }}">{{ data.name }}<span hidden="{{ !data.ext }}">{{ data.ext }}</span></b><b>{{ data.title }}</b></a>
+								<span class="size" hidden="{{ data.children }}" >({{ data.size }}kb)</span>
+								<div class="caption">{{ data.caption }}</div>
 						</div>
-					</plastik-collapsible>			
-				</template>
-
-				<template is="dom-repeat" items="{{ files }}">
-					<div>
-						<a href="{{ item.url }}" title="Click to download this file" download>
-							<paper-icon-button icon="description"></paper-icon-button><span>{{ item.name }}</span> <span>{{ fileDesc(item.info) }}</span> (<span>{{ fileSize(item.size) }}</span>)
-						</a>
+						<paper-material children-toolbar="children-toolbar" hidden="{{ !data.children.length }}">
+								<div nav-group="nav-group">
+									<paper-icon-button icon="hardware:keyboard-arrow-down" expand></paper-icon-button>
+									<paper-icon-button icon="hardware:keyboard-arrow-up" collapse></paper-icon-button>
+									{{ data.name }}
+								</div>
+						</paper-material>
+						<div class="lm children"/>
 					</div>
-				</template>
+			</template>
+		</ir-recursive>
 
 		<iron-ajax
 			id="lsloader"
@@ -66,6 +71,10 @@
 
 			properties : {
 				fulllsUrl 	: { type : String, value : "", notify : true },
+				
+				downloadRoot: { type : String, value : "", notify : true },
+				treeUrl 	: { type : String, value : "", notify : true },
+				
 				isFirstTime : { type : Boolean, value : true },
 				dir 		: { type : String, value : "", notify : true },
 				files 		: { type : Array, value : [] },
@@ -74,6 +83,10 @@
 
 			ready : function() {
 
+				this.$$('ir-recursive').addEventListener('beforeStamp', function(ev) {
+					ev.detail.data.downloadUrl = this.downloadUrl(ev.detail.data);
+				}.bind(this));
+				
 				if(this.isFirstTime)
 				{
 					this.$.lsloader.url = this.fulllsUrl.replace(/\[path\]/, this.dir);
@@ -82,26 +95,17 @@
 				}
 
 			},
-
-			swapIcon : function(e) {
-				if(e.currentTarget.firstElementChild.icon == "folder")
-					e.currentTarget.firstElementChild.icon = "folder-open";
-				else
-					e.currentTarget.firstElementChild.icon = "folder";
+			
+			thisElement : function() {
+				return this;
 			},
-
-			fileSize : function(size) {
-				return size/1000 + "Kb";
-			},
-
-			fileDesc : function(desc) {
-				if(desc)
-					return "- " + desc;
-				else
-					return "";
+			
+			downloadUrl : function(data) {
+				return (this.downloadRoot + data.fileName).split(/\//).filter(function(i) { return i }).join('/')
 			},
 
 			displayLoadedFiles : function() {
+				return;
 				for(var i = 0; i < this.loadedData.length; i++)
 					if(this.loadedData[i].isDirectory)
 						this.push('directories', this.loadedData[i]);
@@ -110,6 +114,17 @@
 			},
 
 		})
+		
+		// simple walk on object properties
+		function objWalk(o, visitor) {
+			if(!o) return
+			Object.getOwnPropertyNames(o).forEach(k => {
+				visitor(o, k);
+				if(typeof(o) == 'object')
+					objWalk(o[k], visitor)
+			})
+		}
+
 	</script>
 
 </dom-module>
