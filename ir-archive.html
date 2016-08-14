@@ -33,13 +33,12 @@
 				</style>
 					<div elevation="3" content="content" class="xxxcontent">
 						<div hidden="{{ data.children.length }}">
-								{{ depth }}
 								<a href="{{ data.downloadUrl }}">
 									<b hidden="{{ data.title }}">{{ data.name }}<span hidden="{{ !data.ext }}">{{ data.ext }}</span></b><b>{{ data.title }}</b></a>
 								<span class="size" hidden="{{ data.children }}" >({{ data.size }}kb)</span>
 								<div class="caption">{{ data.caption }}</div>
 						</div>
-						<paper-material children-toolbar="children-toolbar" hidden="{{ !data.children.length }}">
+						<paper-material children-toolbar="children-toolbar" hidden="{{ !depth }}" hidden="{{ !data.children.length }}">
 								<div nav-group="nav-group">
 									<paper-icon-button icon="hardware:keyboard-arrow-down" expand></paper-icon-button>
 									<paper-icon-button icon="hardware:keyboard-arrow-up" collapse></paper-icon-button>
@@ -85,6 +84,8 @@
 
 				this.$$('ir-recursive').addEventListener('beforeStamp', function(ev) {
 					ev.detail.data.downloadUrl = this.downloadUrl(ev.detail.data);
+					if(!ev.detail.depth)
+						ev.detail.data.name = this.title
 				}.bind(this));
 				
 				if(this.isFirstTime)
