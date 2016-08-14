@@ -1,7 +1,8 @@
 <link rel="import" href="../paper-material/paper-material.html">
 <link rel="import" href="../paper-icon-button/paper-icon-button.html">
 <link rel="import" href="../iron-icons/iron-icons.html">
-<link rel="import" href="../iron-icons/hardware-icons.html">
+<!-- link rel="import" href="../iron-icons/hardware-icons.html"--> 
+<link rel="import" href="../iron-icons/editor-icons.html"> 
 <link rel="import" href="../iron-ajax/iron-ajax.html">
 
 <dom-module id="ir-archive">
@@ -22,28 +23,38 @@
 			color : #798c9a
 		}
 
+
 	</style>
 
 	<template>
-		<ir-recursive notify-url="{{ treeUrl }}" meta="{{ thisElement() }}">
+		<ir-recursive collapsed notify-url="{{ treeUrl }}" meta="{{ thisElement() }}">
 			<template item="item">
 				<style>
 					[children-toolbar] {  }
 					.lm { padding-left : 10px; }
 					[content] { padding : 5px; }
 					.xxxcontent { display : block }
+							
+					iron-icon {
+						color : #798c9a
+					}
 				</style>
-					<div elevation="3" content="content" class="xxxcontent">
-						<div hidden="{{ data.children.length }}">
+					<div elevation="3" content="content">
+						<div hidden="{{ data.isDirectory }}">
+								<iron-icon icon="editor:insert-drive-file"></iron-icon>
 								<a href="{{ data.downloadUrl }}">
-									<b hidden="{{ data.title }}">{{ data.name }}<span hidden="{{ !data.ext }}">{{ data.ext }}</span></b><b>{{ data.title }}</b></a>
+									<b hidden="{{ data.title }}">{{ data.name }}<span hidden="{{ !data.ext }}">{{ data.ext }}</span></b><b>{{ data.title }}</b>
+									</a>
+								
 								<span class="size" hidden="{{ data.children }}" >({{ data.size }}kb)</span>
+								<a href="{{ data.downloadUrl }}"><iron-icon icon="file-download"></iron-icon></a>
 								<div class="caption">{{ data.caption }}</div>
+								
 						</div>
 						<paper-material children-toolbar="children-toolbar" hidden="{{ !depth }}" hidden="{{ !data.children.length }}">
 								<div nav-group="nav-group">
-									<paper-icon-button icon="hardware:keyboard-arrow-down" expand></paper-icon-button>
-									<paper-icon-button icon="hardware:keyboard-arrow-up" collapse></paper-icon-button>
+									<paper-icon-button icon="folder" expand></paper-icon-button>
+									<paper-icon-button icon="folder-open" collapse></paper-icon-button>
 									{{ data.name }}
 								</div>
 						</paper-material>
@@ -88,19 +99,24 @@
 					ev.detail.data.downloadUrl = this.downloadUrl(ev.detail.data);
 					
 					if(ev.detail.data.children)
-						ev.detail.data.children = ev.detail.data.children.sort(function(x, y) { 
-							var xt, yt;
-							if(x.isDirectory && !y.isDirectory) 
-								return -1;
-							
-							if(!x.isDirectory && y.isDirectory) 
-								return 1;
-							
-							if((x.title || x.name) < (y.title || y.name))
-								return -1;
-							else
-								return 1;
-						});
+						ev.detail.data.children = 
+							ev.detail.data.children
+							.filter(function(x) { return !x.isDirectory || (x.children && x.children.length) })
+							.sort(function(x, y) { 
+								var xt, yt;
+								if(x.isDirectory && !y.isDirectory) 
+									return -1;
+								
+								if(!x.isDirectory && y.isDirectory) 
+									return 1;
+								
+								if((x.title || x.fileName) < (y.title || y.fileName))
+									return -1;
+								else
+									return 1;
+									
+								return 0
+							});
 
 					if(!ev.detail.depth)
 						ev.detail.data.name = this.title
