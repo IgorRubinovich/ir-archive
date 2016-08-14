@@ -83,13 +83,30 @@
 			},
 
 			ready : function() {
-
-				this.$$('ir-recursive').addEventListener('beforeStamp', function(ev) {
+				var ir = this.$$('ir-recursive');
+				ir.addEventListener('beforeStamp', function(ev) {
 					ev.detail.data.downloadUrl = this.downloadUrl(ev.detail.data);
+					
+					if(ev.detail.data.children)
+						ev.detail.data.children = ev.detail.data.children.sort(function(x, y) { 
+							var xt, yt;
+							if(x.isDirectory && !y.isDirectory) 
+								return -1;
+							
+							if(!x.isDirectory && y.isDirectory) 
+								return 1;
+							
+							if((x.title || x.name) < (y.title || y.name))
+								return -1;
+							else
+								return 1;
+						});
+
 					if(!ev.detail.depth)
 						ev.detail.data.name = this.title
+					
 				}.bind(this));
-				
+								
 				if(this.isFirstTime)
 				{
 					this.$.lsloader.url = this.fulllsUrl.replace(/\[path\]/, this.dir);
