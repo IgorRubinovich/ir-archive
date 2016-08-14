@@ -23,9 +23,9 @@
   "dependencies": {
     "iron-ajax": "PolymerElements/iron-ajax#^1.0.4",
     "iron-icons": "PolymerElements/iron-icons#^1.0.3",
-    "plastik-collapsible": "~0.0.3"
+    "ir-recursive": "git@github.com:IgorRubinovich/ir-recursive.git"
   },
   "resolutions": {
-    "polymer": "^1.2.0"
-   }
+    "polymer": "^1.5.0"
+  }
 }
