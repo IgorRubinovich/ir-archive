@@ -31,16 +31,22 @@
 			<template item="item">
 				<style>
 					[children-toolbar] {  }
-					.lm { padding-left : 10px; }
 					[content] { padding : 5px; }
 					.xxxcontent { display : block }
 							
 					iron-icon {
 						color : #798c9a
 					}
+					.file {
+						padding-left : 8px;				
+					}
+					
+					[root-file] {
+					}
+					
 				</style>
 					<div elevation="3" content="content">
-						<div hidden="{{ data.isDirectory }}">
+						<div class="file" root-file="{{ !depth] }}" hidden="{{ data.isDirectory }}">
 								<iron-icon icon="editor:insert-drive-file"></iron-icon>
 								<a href="{{ data.downloadUrl }}">
 									<b hidden="{{ data.title }}">{{ data.name }}<span hidden="{{ !data.ext }}">{{ data.ext }}</span></b><b>{{ data.title }}</b>
@@ -137,7 +143,7 @@
 			},
 			
 			downloadUrl : function(data) {
-				return (this.downloadRoot + data.fileName).split(/\//).filter(function(i) { return i }).join('/')
+				return joinPath(this.downloadRoot, data.fileName);
 			},
 
 			displayLoadedFiles : function() {
@@ -150,6 +156,10 @@
 			},
 
 		})
+		
+		function joinPath(p,q) {
+			return p + q.replace(/^\//,'');
+		}
 		
 		// simple walk on object properties
 		function objWalk(o, visitor) {
