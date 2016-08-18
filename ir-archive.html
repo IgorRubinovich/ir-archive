@@ -125,6 +125,7 @@
 							})
 							.map(function(f) {
 								f.kibSize = f.size / 1024;
+								return f;
 							});
 
 					if(!ev.detail.depth)
