@@ -99,13 +99,13 @@
 				dir 		: { type : String, value : "", notify : true },
 				files 		: { type : Array, value : [] },
 				directories : { type : Array, value : [] },  
-				receivedData : { type : Boolean },  
+				receivedData : { type : Boolean, value : false },  
 			},
 
 			ready : function() {
 				var ir = this.$$('ir-recursive');
-				ir.addEventListener('beforeStamp', function(ev) {
-					this.set("receivedData")
+				ir.addEventListener('afterStamp', function(ev) {
+					this.set("receivedData", true)
 				}.bind(this));
 				
 				ir.addEventListener('beforeStamp', function(ev) {
