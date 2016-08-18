@@ -52,7 +52,7 @@
 									<b hidden="{{ data.title }}">{{ data.name }}<span hidden="{{ !data.ext }}">{{ data.ext }}</span></b><b>{{ data.title }}</b>
 									</a>
 								
-								<span class="size" hidden="{{ data.children }}" >({{ data.size }}kb)</span>
+								<span class="size" hidden="{{ data.children }}" >({{ data.kibSize }}KiB)</span>
 								<a href="{{ data.downloadUrl }}"><iron-icon icon="file-download"></iron-icon></a>
 								<div class="caption">{{ data.caption }}</div>
 								
@@ -122,6 +122,9 @@
 									return 1;
 									
 								return 0
+							})
+							.map(function(f) {
+								f.kibSize = f.size / 1024;
 							});
 
 					if(!ev.detail.depth)
