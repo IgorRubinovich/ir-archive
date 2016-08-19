@@ -99,7 +99,7 @@
 				dir 		: { type : String, value : "", notify : true },
 				files 		: { type : Array, value : [] },
 				directories : { type : Array, value : [] },  
-				receivedData : { type : Boolean, value : false },  
+				receivedData : { type : Boolean, value : false }  
 			},
 
 			ready : function() {
@@ -131,7 +131,7 @@
 								return 0
 							})
 							.map(function(f) {
-								f.kibSize = f.size / 1024;
+								f.kibSize = Math.floor(10 * f.size / 1024) / 10;
 								return f;
 							});
 
