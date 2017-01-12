@@ -29,7 +29,7 @@
 
 	<template>
 		<paper-spinner hidden="{{ receivedData }}" active="{{ !receivedData }}"></paper-spinner>
-		<ir-recursive hidden="{{ !receivedData }}" collapsed notify-url="{{ treeUrl }}" meta="{{ thisElement() }}">
+		<ir-recursive hidden="{{ !receivedData }}" collapsed data-url="{{ treeUrl }}" meta="{{ thisElement() }}">
 			<template item="item">
 				<style>
 					[children-toolbar] {  }
