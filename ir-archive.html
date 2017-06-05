@@ -185,7 +185,7 @@
 		// simple walk on object properties
 		function objWalk(o, visitor) {
 			if(!o) return
-			Object.getOwnPropertyNames(o).forEach(k => {
+			Object.getOwnPropertyNames(o).forEach(function(k) {
 				visitor(o, k);
 				if(typeof(o) == 'object')
 					objWalk(o[k], visitor)
