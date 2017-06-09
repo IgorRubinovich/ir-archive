@@ -152,7 +152,7 @@
 								
 				if(this.isFirstTime)
 				{
-					this.$.lsloader.url = this.fulllsUrl.replace(/\[path\]/, this.dir);
+					this.$.lsloader.url = this.treeUrl;
 					this.$.lsloader.generateRequest();				
 					this.isFirstTime = false;	
 				}
@@ -168,7 +168,7 @@
 			},
 
 			displayLoadedFiles : function() {
-				return;
+				//return;
 				for(var i = 0; i < this.loadedData.length; i++)
 					if(this.loadedData[i].isDirectory)
 						this.push('directories', this.loadedData[i]);
@@ -179,7 +179,7 @@
 		})
 		
 		function joinPath(p,q) {
-			return p + q.replace(/^\//,'');
+			return (p + q).replace(/\/\//g,'\/');
 		}
 		
 		// simple walk on object properties
